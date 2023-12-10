@@ -28,6 +28,9 @@ export class UsersController {
     }
   }
 
+  @Post('register')
+  register() {}
+
   @Get(':id') // Get /users/id
   findOne(@Param('id') id: string) {
     return this.usersService.findOne(+id);
