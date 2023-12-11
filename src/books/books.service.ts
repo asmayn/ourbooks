@@ -1,26 +1,57 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateBookDto } from './dto/create-book.dto';
 import { UpdateBookDto } from './dto/update-book.dto';
+import { DataSource } from 'typeorm';
+import { Book } from './entities/book.entity';
+import { DonateToBook } from './dto/donate-to-book.dto';
+import { UsersService } from 'src/users/users.service';
 
 @Injectable()
 export class BooksService {
-  create(createBookDto: CreateBookDto) {
-    return 'This action adds a new book';
+  constructor(
+    private dataSouce: DataSource,
+    private userService: UsersService,
+  ) {}
+  
+  async create({ title, description }: CreateBookDto) {
+    const book = new Book();
+    book.title = title;
+    book.description = description;
+    return this.dataSouce.manager.save(book);
   }
 
-  findAll() {
-    return `This action returns all books`;
+  async findAll() {
+    return this.dataSouce.manager.find(Book);
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} book`;
+  async findOne(id: number) {
+    const book = await this.dataSouce.manager.findOne(Book, {
+      where: {
+        id: id,
+      }
+    });
+    if (book) return book;
+    throw new NotFoundException('Book not found')
   }
 
-  update(id: number, updateBookDto: UpdateBookDto) {
-    return `This action updates a #${id} book`;
+  async update(id: number, { title, description }: UpdateBookDto) {
+    const book = await this.findOne(id);
+    book.title = title;
+    book.description = description;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} book`;
+  async remove(id: number) {
+    const book = await this.findOne(id);
+    return this.dataSouce.manager.remove(book);
+  }
+
+  async donation({ userId, bookId }: DonateToBook) {
+    //find a user by id
+    const user= await this.userService.findOne(userId);
+    const book = await this.findOne(bookId);
+
+    user.book.push(book)
+    const result = await this.dataSouce.manager.save(user)
+    return true;
   }
 }

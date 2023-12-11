@@ -1,7 +1,7 @@
-import { ApiProperty } from "@nestjs/swagger";
-import { IsStrongPasswordOptions } from "class-validator";
-import { Address } from "cluster";
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
+import { Exclude } from "class-transformer";
+import { Book } from "src/books/entities/book.entity";
+import { Column, Entity, ManyToMany, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
 export class User {
@@ -25,6 +25,7 @@ export class User {
     email: string;
 
     @ApiProperty()
+    @Exclude()
     @Column({
         type: 'text'
     })
@@ -32,6 +33,18 @@ export class User {
 
     @ApiProperty()
     @Column()
-    phone: number;
+    phone: string;
 
+    @ApiProperty()
+    @Column()
+    address: string;
+
+    @ApiPropertyOptional({
+        type: [Book]
+    })
+    @ManyToMany(
+        () => Book,
+        (book) => book.users,
+    )
+    book: Book[];
 }

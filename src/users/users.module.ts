@@ -10,5 +10,6 @@ import { User } from './entities/user.entity';
   ],
   controllers: [UsersController],
   providers: [UsersService], // @Injectable services
+  exports: [UsersService]
 })
 export class UsersModule {}

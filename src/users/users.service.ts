@@ -1,50 +1,101 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
 import { DataSource } from 'typeorm';
+import * as bcrypt from 'bcrypt'
+import { SALT_ROUND } from 'src/auth/constands';
+// import { SALT_ROUND } from 'src/auth/auth.service';
+
 
 @Injectable()
 export class UsersService {
   // private users: User[] = [];
   // private runningID: number = 1;
 
-  //Service connect database => Promise
+  //Service connect database => เรียกใช้งานจะกลายเป็น Promise คือ async
   constructor(
     private dataSource: DataSource,
   ) {}
 
   async create(createUserDto: CreateUserDto): Promise<User> {
-    const { firstname, lastname, email, phone} = createUserDto;
+    const { firstname, lastname, email, password ,phone ,address} = createUserDto;
+    console.log('Creating')
+
+    const user = await this.findOneByUsername(email);
+    if (user) {
+      throw new BadRequestException('duplicate email')
+    }
+
     const newUser = new User();
     newUser.firstname = firstname;
     newUser.lastname = lastname;
     newUser.email = email;
-    //newUser.password = password;
+
+    console.log('hashing')
+    const hashedPassword = await bcrypt.hash(password, SALT_ROUND)
+    newUser.password = hashedPassword;
+    console.log('hashed')
+
     newUser.phone = phone;
-    //newUser.address = address;
+    newUser.address = address;
 
     const saved = await this.dataSource.manager.save(newUser);
-    return null;
+    return saved;
   }
 
   async findAll(): Promise<User[]> {
     return this.dataSource.manager.find(User);
   }
 
-  async findOne(id: number) {
-    return this.dataSource.manager.findOneOrFail(User, {
+  async findOne(id: number): Promise<User> {
+    const user = await this.dataSource.manager.findOne(User, {
       where: {
         id: id
+      },
+      relations: {
+        book: true,
       }
     });
+    if (user) return user;
+    throw new NotFoundException('User not found')
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
+  async findOneByUsername(email: string): Promise<User>{
+    const user = await this.dataSource.manager.findOne(User, {
+      where: {
+        email: email
+      }
+    });
+    if (user) return user;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+  async update(id: number, updateUserDto: UpdateUserDto): Promise<User> {
+    const user = await this.findOne(id)
+    
+    if(updateUserDto.firstname) {
+      user.firstname = updateUserDto.firstname;
+    }
+    if(updateUserDto.lastname) {
+      user.lastname = updateUserDto.lastname;
+    }
+    if(updateUserDto.email) {
+      user.email = updateUserDto.email;
+    }
+    if(updateUserDto.password) {
+      user.password = updateUserDto.password;
+    }
+    if(updateUserDto.phone) {
+      user.phone = updateUserDto.phone;
+    }
+    if(updateUserDto.address) {
+      user.address = updateUserDto.address;
+    }
+    return this.dataSource.manager.save(user)
+  }
+
+  async remove(id: number): Promise<User> {
+    const user = await this.findOne(id)
+    return this.dataSource.manager.remove(user);
   }
 }

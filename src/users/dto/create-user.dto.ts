@@ -21,7 +21,8 @@ export class CreateUserDto {
     password: string;
 
     @ApiProperty()
-    phone: number;
+    phone: string;
 
-    address: Address;
+    @ApiProperty()
+    address: string;
 }
