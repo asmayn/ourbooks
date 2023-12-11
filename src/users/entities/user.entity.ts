@@ -39,6 +39,12 @@ export class User {
     @Column()
     address: string;
 
+    @ApiProperty()
+    @Column({
+        default: false
+    })
+    isAdmin: boolean;
+
     @ApiPropertyOptional({
         type: [Book]
     })

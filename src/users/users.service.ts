@@ -22,7 +22,7 @@ export class UsersService {
     const { firstname, lastname, email, password ,phone ,address} = createUserDto;
     console.log('Creating')
 
-    const user = await this.findOneByUsername(email);
+    const user = await this.findOneByEmail(email);
     if (user) {
       throw new BadRequestException('duplicate email')
     }
@@ -31,15 +31,12 @@ export class UsersService {
     newUser.firstname = firstname;
     newUser.lastname = lastname;
     newUser.email = email;
-
-    console.log('hashing')
-    const hashedPassword = await bcrypt.hash(password, SALT_ROUND)
-    newUser.password = hashedPassword;
-    console.log('hashed')
-
     newUser.phone = phone;
     newUser.address = address;
 
+    const hashedPassword = await bcrypt.hash(password, SALT_ROUND)
+    newUser.password = hashedPassword;
+    
     const saved = await this.dataSource.manager.save(newUser);
     return saved;
   }
@@ -61,7 +58,7 @@ export class UsersService {
     throw new NotFoundException('User not found')
   }
 
-  async findOneByUsername(email: string): Promise<User>{
+  async findOneByEmail(email: string): Promise<User>{
     const user = await this.dataSource.manager.findOne(User, {
       where: {
         email: email

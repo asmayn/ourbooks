@@ -12,7 +12,7 @@ export class AuthService {
     ) {}
 
     async signIn(email: string, password: string){
-        const user = await this.userService.findOneByUsername(email);
+        const user = await this.userService.findOneByEmail(email);
         if (!user) {
             throw new BadRequestException('wrong email or password');
         }
@@ -24,7 +24,7 @@ export class AuthService {
                 'access_token': this.jwtService.sign(payload)
             }
         }
-        // throw new BadRequestException('wrong email or password');
-        throw new UnauthorizedException();
+        throw new BadRequestException('wrong email or password');
+        // throw new UnauthorizedException();
     }
 }

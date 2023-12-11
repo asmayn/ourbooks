@@ -1,30 +1,20 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Put, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Put, Query, UseGuards } from '@nestjs/common';
 import { UsersService } from './users.service';
-import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { User } from './entities/user.entity';
 import { UserResponse } from './dto/user-response.dto';
-import { ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { ActionResponseDto } from './dto/action-response.dto';
-import { query } from 'express';
-import { GetUserQuery } from './dto/get-user-query.dto';
+import { AuthGuard } from 'src/auth/guards/auth.guard';
+import { AdminGuard } from 'src/auth/guards/admin.guard';
 
 @ApiTags('Users')
+@ApiBearerAuth()
+@UseGuards(AuthGuard, AdminGuard)
 @Controller('users')
 export class UsersController {
   constructor(
     private readonly usersService: UsersService
     ) {}
-
-  @Post() // Post /users
-  @ApiResponse({ status: 201, type: ActionResponseDto})
-  async create(@Body() createUserDto: CreateUserDto): Promise<ActionResponseDto> {
-    const user = await this.usersService.create(createUserDto);
-    return {
-      message: 'register successfully',
-      user: user,
-    }
-  }
 
   @Get() // Get /users
   async findAll(
