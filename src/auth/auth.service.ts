@@ -16,7 +16,7 @@ export class AuthService {
         if (!user) {
             throw new BadRequestException('wrong email or password');
         }
-        // validate password
+        // validate password ตรวจสอบรหัสผ่าน
         const isMatched = await bcrypt.compare(password, user.password)
         if (isMatched) {
             const payload = { userId: user.id }

@@ -1,12 +1,25 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, BadRequestException } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  BadRequestException,
+  UseGuards,
+} from '@nestjs/common';
 import { BooksService } from './books.service';
 import { CreateBookDto } from './dto/create-book.dto';
 import { UpdateBookDto } from './dto/update-book.dto';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { UsersService } from 'src/users/users.service';
 import { DonateToBook } from './dto/donate-to-book.dto';
+import { AuthGuard } from 'src/auth/guards/auth.guard';
 
 @ApiTags('Books')
+@ApiBearerAuth()
+@UseGuards(AuthGuard)
 @Controller('books')
 export class BooksController {
   constructor(
@@ -42,12 +55,12 @@ export class BooksController {
 
   @Post('donation')
   async donation(@Body() donateBody: DonateToBook) {
-    const success = await this.booksService.donation(donateBody)
-    if(success) {
+    const success = await this.booksService.donation(donateBody);
+    if (success) {
       return {
-        message: 'Donated successfully'
-      }
+        message: 'Donated successfully',
+      };
     }
-    throw new BadRequestException("Couldn't ....")
+    throw new BadRequestException("Couldn't ....");
   }
 }

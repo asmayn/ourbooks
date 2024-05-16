@@ -4,6 +4,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { BooksModule } from './books/books.module';
 import { AuthModule } from './auth/auth.module';
 import { JwtModule } from '@nestjs/jwt';
+import { DonateService } from './donate/donate.service';
+import { DonateModule } from './donate/donate.module';
 
 @Module({
   imports: [
@@ -24,7 +26,8 @@ import { JwtModule } from '@nestjs/jwt';
       autoLoadEntities: true,
       synchronize: true,
     }), 
-    UsersModule, BooksModule, AuthModule],
+    UsersModule, BooksModule, AuthModule, DonateModule],
+  providers: [DonateService],
   
 })
 export class AppModule {}

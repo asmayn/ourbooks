@@ -12,7 +12,7 @@ export class BooksService {
     private dataSouce: DataSource,
     private userService: UsersService,
   ) {}
-  
+
   async create({ title, description }: CreateBookDto) {
     const book = new Book();
     book.title = title;
@@ -28,10 +28,10 @@ export class BooksService {
     const book = await this.dataSouce.manager.findOne(Book, {
       where: {
         id: id,
-      }
+      },
     });
     if (book) return book;
-    throw new NotFoundException('Book not found')
+    throw new NotFoundException('Book not found');
   }
 
   async update(id: number, { title, description }: UpdateBookDto) {
@@ -47,11 +47,11 @@ export class BooksService {
 
   async donation({ userId, bookId }: DonateToBook) {
     //find a user by id
-    const user= await this.userService.findOne(userId);
+    const user = await this.userService.findOne(userId);
     const book = await this.findOne(bookId);
 
-    user.book.push(book)
-    const result = await this.dataSouce.manager.save(user)
+    user.book.push(book);
+    const result = await this.dataSouce.manager.save(user);
     return true;
   }
 }

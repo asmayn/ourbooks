@@ -9,27 +9,25 @@ import {
 } from 'class-validator';
 import { Address } from 'cluster';
 
-export class CreateUserDto {
+export class CreateDonateDto {
   @ApiProperty()
   @IsNotEmpty()
-  firstname: string;
-
-  @ApiProperty()
-  @IsNotEmpty()
-  lastname: string;
+  postDate: String;
 
   @ApiProperty()
   @IsNotEmpty()
-  @IsEmail()
-  email: string;
+  bookId: number;
 
   @ApiProperty()
   @IsNotEmpty()
-  password: string;
+  donateId: number;
 
   @ApiProperty()
-  phone: string;
+  recieverId: number;
 
   @ApiProperty()
-  address: string;
+  shippingDate: String;
+
+  @ApiProperty()
+  receivedDate: String;
 }

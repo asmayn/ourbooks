@@ -1,4 +1,15 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Put, Query, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  Put,
+  Query,
+  UseGuards,
+} from '@nestjs/common';
 import { UsersService } from './users.service';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UserResponse } from './dto/user-response.dto';
@@ -12,20 +23,17 @@ import { AdminGuard } from 'src/auth/guards/admin.guard';
 @UseGuards(AuthGuard, AdminGuard)
 @Controller('users')
 export class UsersController {
-  constructor(
-    private readonly usersService: UsersService
-    ) {}
+  constructor(private readonly usersService: UsersService) {}
 
   @Get() // Get /users
-  async findAll(
-    // @Query() query: GetUserQuery
-    ): Promise<UserResponse> {
+  async findAll() // @Query() query: GetUserQuery
+  : Promise<UserResponse> {
     const users = await this.usersService.findAll();
     //format
     return {
       total: users.length,
-      data: users
-    }
+      data: users,
+    };
   }
 
   // @Post('register')
@@ -47,6 +55,6 @@ export class UsersController {
     return {
       message: 'Delete user ' + id + ' successfully',
       user: user,
-    }
+    };
   }
 }
