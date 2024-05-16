@@ -7,15 +7,15 @@ import { AuthGuard } from 'src/auth/guards/auth.guard';
 @ApiTags('Donate')
 @ApiBearerAuth()
 @UseGuards(AuthGuard)
-@Controller('donates')
+@Controller()
 export class DonateController {
   // private donateService = DonateService;
   constructor(private donateService: DonateService) {}
 
-  @Get()
-  async findAll() {
-    return this.donateService.findAll();
-  }
+  // @Get()
+  // async findAll() {
+  //   return this.donateService.findAll();
+  // }
   // async findAll() {
   //   return this.donateService.findAll();
   // }

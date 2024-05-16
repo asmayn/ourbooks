@@ -18,6 +18,18 @@ export class Book {
 
   @ApiProperty()
   @Column()
+  bookName: string;
+
+  @ApiProperty()
+  @Column()
+  bookAuthor: string;
+
+  @ApiProperty()
+  @Column()
+  bookCategory: string;
+
+  @ApiProperty()
+  @Column()
   title: string;
 
   @ApiProperty()
