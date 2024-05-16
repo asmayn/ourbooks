@@ -1,7 +1,14 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Exclude } from 'class-transformer';
+import { ignoreElements } from 'rxjs';
 import { Book } from 'src/books/entities/book.entity';
-import { Column, Entity, ManyToMany, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  ManyToMany,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
 @Entity()
 export class User {
@@ -47,6 +54,6 @@ export class User {
   @ApiPropertyOptional({
     type: [Book],
   })
-  @ManyToMany(() => Book, (book) => book.users)
-  book: Book[];
+  @OneToMany(() => Book, (book) => book.user)
+  books: Book[];
 }

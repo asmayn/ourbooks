@@ -17,10 +17,10 @@ import { UsersService } from 'src/users/users.service';
 import { DonateToBook } from './dto/donate-to-book.dto';
 import { AuthGuard } from 'src/auth/guards/auth.guard';
 
-@ApiTags('Books')
+@ApiTags('Donations')
 @ApiBearerAuth()
 @UseGuards(AuthGuard)
-@Controller('books')
+@Controller('donations')
 export class BooksController {
   constructor(
     private readonly booksService: BooksService,
@@ -51,16 +51,5 @@ export class BooksController {
   @Delete(':id')
   async remove(@Param('id') id: string) {
     return this.booksService.remove(+id);
-  }
-
-  @Post('donation')
-  async donation(@Body() donateBody: DonateToBook) {
-    const success = await this.booksService.donation(donateBody);
-    if (success) {
-      return {
-        message: 'Donated successfully',
-      };
-    }
-    throw new BadRequestException("Couldn't ....");
   }
 }

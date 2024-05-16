@@ -25,8 +25,8 @@ export class DonateController {
   // }
   // @Get(':id')
   // findOne() {}
-  @Get(':id') // Get /users/id
-  findOne(@Param('id') id: string) {
-    return this.donateService.findOne(+id);
-  }
+  // @Get(':id') // Get /users/id
+  // findOne(@Param('id') id: string) {
+  //   return this.donateService.findOne(+id);
+  // }
 }

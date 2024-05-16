@@ -13,8 +13,10 @@ export class BooksService {
     private userService: UsersService,
   ) {}
 
-  async create({ title, description }: CreateBookDto) {
+  async create({ userId, title, description }: CreateBookDto) {
     const book = new Book();
+    const user = this.userService.findOne(userId)
+    book.user = await user;
     book.title = title;
     book.description = description;
     return this.dataSouce.manager.save(book);
@@ -45,13 +47,13 @@ export class BooksService {
     return this.dataSouce.manager.remove(book);
   }
 
-  async donation({ userId, bookId }: DonateToBook) {
-    //find a user by id
-    const user = await this.userService.findOne(userId);
-    const book = await this.findOne(bookId);
+  // async donation({ userId, bookId }: DonateToBook) {
+  //   //find a user by id
+  //   const user = await this.userService.findOne(userId);
+  //   const book = await this.findOne(bookId);
 
-    user.book.push(book);
-    const result = await this.dataSouce.manager.save(user);
-    return true;
-  }
+  //   user.book.push(book);
+  //   const result = await this.dataSouce.manager.save(user);
+  //   return true;
+  // }
 }

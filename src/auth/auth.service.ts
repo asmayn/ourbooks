@@ -21,7 +21,8 @@ export class AuthService {
         if (isMatched) {
             const payload = { userId: user.id }
             return {
-                'access_token': this.jwtService.sign(payload)
+                'access_token': this.jwtService.sign(payload),
+                'userId': user.id
             }
         }
         throw new BadRequestException('wrong email or password');

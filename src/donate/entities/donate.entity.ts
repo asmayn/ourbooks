@@ -41,7 +41,7 @@ export class Donate {
   @Column({ type: 'date' })
   receivedDate: String;
 
-  @ManyToMany(() => Book, (book) => book.users)
-  @JoinTable()
-  users: User[];
+  // @ManyToMany(() => Book, (book) => book.users)
+  // @JoinTable()
+  // users: User[];
 }
