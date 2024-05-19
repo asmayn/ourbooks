@@ -30,11 +30,11 @@ export class Book {
 
   @ApiProperty()
   @Column()
-  title: string;
+  bookCon: string;
 
   @ApiProperty()
   @Column()
-  description: string;
+  bookDesc: string;
 
   @ManyToOne(() => User, (user) => user.books)
   @JoinTable()

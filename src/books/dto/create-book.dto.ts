@@ -21,9 +21,9 @@ export class CreateBookDto {
 
   @ApiProperty()
   @IsNotEmpty()
-  title: string;
+  bookCon: string;
 
   @ApiProperty()
   @IsNotEmpty()
-  description: string;
+  bookDesc: string;
 }

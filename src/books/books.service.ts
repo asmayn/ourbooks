@@ -13,15 +13,22 @@ export class BooksService {
     private userService: UsersService,
   ) {}
 
-  async create({ userId, bookName, bookAuthor, bookCategory, title, description }: CreateBookDto) {
+  async create({
+    userId,
+    bookName,
+    bookAuthor,
+    bookCategory,
+    bookCon,
+    bookDesc,
+  }: CreateBookDto) {
     const book = new Book();
-    const user = this.userService.findOne(userId)
+    const user = this.userService.findOne(userId);
     book.user = await user;
     book.bookName = bookName;
     book.bookAuthor = bookAuthor;
     book.bookCategory = bookCategory;
-    book.title = title;
-    book.description = description;
+    book.bookCon = bookCon;
+    book.bookDesc = bookDesc;
     return this.dataSouce.manager.save(book);
   }
 
@@ -39,13 +46,16 @@ export class BooksService {
     throw new NotFoundException('Book not found');
   }
 
-  async update(id: number, { bookName, bookAuthor, bookCategory, title, description }: UpdateBookDto) {
+  async update(
+    id: number,
+    { bookName, bookAuthor, bookCategory, bookCon, bookDesc }: UpdateBookDto,
+  ) {
     const book = await this.findOne(id);
     book.bookName = bookName;
     book.bookAuthor = bookAuthor;
     book.bookCategory = bookCategory;
-    book.title = title;
-    book.description = description;
+    book.bookCon = bookCon;
+    book.bookDesc = bookDesc;
   }
 
   async remove(id: number) {
